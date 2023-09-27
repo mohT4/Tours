@@ -1,3 +1,4 @@
+const path = require('path')
 const express = require('express');
 const morgan = require('morgan');
 const AppError = require('./utils/appError');
@@ -14,6 +15,11 @@ const reviewsRouter = require(`${__dirname}/modules/Routers/reviewsRouter.js`);
 const app = express();
 
 //GLOBAL MIDLEWARES
+
+app.set('view engine', 'pug');
+app.set('views', path.join(__dirname, 'views'))
+
+
 //set security HTTP headers
 app.use(helmet());
 
@@ -41,6 +47,26 @@ app.use(mongoSanitize());
 app.use(xssClean());
 
 app.use(hpp());
+
+
+app.get('/',(req,res)=>{
+  res.status(200).render('base',{
+    tour : 'the forest hiker Tour'
+  })
+})
+
+
+app.get('/overview',(req,res)=>{
+  res.status(200).render('overview',{
+    tour : 'All tours'
+  })
+})
+
+app.get('/tour', (req,res)=>{
+  res.status.render('tour',{
+    tour : 'the Forest hiker Tour'
+  })
+})
 
 app.use('/api/v1/tours', tourRouter);
 app.use('/api/v1/users', UserRouter);
